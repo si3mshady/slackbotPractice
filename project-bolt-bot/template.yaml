@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  serverless slackbot practice 
+
+
+Globals:
+  Function:
+    Timeout: 3
+
+Parameters:
+  SlackSigningSecret:
+    Type: String
+  SlackBotToken:
+    Type: String
+  AccessKeyId:
+    Type: String
+  SecretAccessKey:
+    Type: String
+ 
+
+Resources:
+  ProjectBoltFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      Environment:
+        Variables:
+          AccessKeyId: !Ref AccessKeyId
+          SecretAccessKey: !Ref SecretAccessKey
+       
+          SLACK_SIGNING_SECRET: !Ref SlackSigningSecret
+          SLACK_BOT_TOKEN: !Ref SlackBotToken
+
+      CodeUri: project_bolt/
+      Handler: app.lambda_handler
+      Runtime: python3.6
+      Events:
+        ProjectAPI:
+          Type: Api 
+          Properties:
+            Path: /slack
+            Method: post
+
